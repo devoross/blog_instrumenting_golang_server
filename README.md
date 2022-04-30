@@ -8,6 +8,8 @@ This server will retrieve a random piece of advice from an in memory store, as w
 
 In `server/server.go` we run a method on the store which will populate it. This takes one single `int` parameter which represents the amount of quotes you wish to populate the store with when the application starts. Below are the endpoints and parameters for those if you wish to add your own
 
+The server has a built in store, which is responsible for storing a slice of advices of which we can pick at random as and when that is requested
+
 ## Endpoints
 
 ### /api/v1/advice
@@ -78,3 +80,21 @@ Response
     "success": true
 }
 ```
+
+### Metrics
+
+RED metrics are what we are collecting as part of this simple Go HTTP Web Server
+
+* Request - Total amount of requests (We should be able to use this with the errors metric to easily determine success/fail ratio)
+* Errors - Errors that we experience within our application
+* Duration - The latency of our requests, how long are they taking?
+
+#### Metrics we are collecting
+
+* Total Requests - `iwebserver_requests_total` - This will be a counter to count the total amount of requests - Labels: `code, route`
+* Total Errors - `iwebserver_errors_total` - This will be a counter to count the total amount of failed requests - Labels: `code, route`
+* Duration - `iwebserver_requests_duration` - This will be a gauge to record the total duration of a request - Labels: `code, route`
+* Items action total - `iwebserver_store_action` - This will be a counter to count the amount of times that a piece of advice has been removed from the store - Labels: `action (deleted/created)`
+* Items action duration - `iwebserver_store_actions_duration` - This will be a gauge that records the total time taken to remove/create a piece of advice - Labels: `action (deleted/created)`
+* Total items in the store - `iwebserver_store_items_total` - This will be a gauge which states the current total amount of items in the store
+* Total errors to the store - `iwebserver_store_errors_total` - This will be a counter which records the total amount of errors when hitting the store

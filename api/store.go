@@ -7,6 +7,21 @@ import (
 	"time"
 )
 
+type notFoundError struct {
+	Err error
+}
+type conflictError struct {
+	Err error
+}
+
+func (e *notFoundError) Error() string {
+	return e.Err.Error()
+}
+
+func (e *conflictError) Error() string {
+	return e.Err.Error()
+}
+
 // global store, implement mutex when writing to it
 type Store struct {
 	mutex   sync.Mutex
@@ -22,7 +37,9 @@ func NewStore() *Store {
 
 func (s *Store) add(val string) error {
 	if s.contains(val) {
-		return errors.New("that advice already exists")
+		return &conflictError{
+			Err: errors.New("that advice already exists"),
+		}
 	}
 
 	// add a mutex lock around this
@@ -32,12 +49,39 @@ func (s *Store) add(val string) error {
 	return nil
 }
 
+func (s *Store) update(val string, updatedVal string) error {
+	if !s.contains(val) {
+		return &notFoundError{
+			Err: errors.New("no item found with provided value"),
+		}
+	}
+
+	// what if one already exists with that name? (The one you are updating to)
+	if s.contains(updatedVal) {
+		return &conflictError{
+			Err: errors.New("the value you are trying to update to already exists"),
+		}
+	}
+
+	// remove from the slice
+	err := s.remove(val)
+	if err != nil {
+		return err
+	}
+
+	// add to the slice - throw away the error because we removed it just before
+	_ = s.add(updatedVal)
+	return nil
+}
+
 func (s *Store) remove(val string) error {
 	i := s.getItemIndexValue(val)
 
 	if !s.contains(val) {
 		// we don't have the item
-		return errors.New("no item found with provided value")
+		return &notFoundError{
+			Err: errors.New("no item found with provided value"),
+		}
 	}
 
 	s.mutex.Lock()
@@ -79,7 +123,9 @@ func (s *Store) PopulateStore(amount int) error {
 func (s *Store) retrieveRandomAdvice() (string, error) {
 	// If we have no advices to give, we need to error
 	if len(s.advices) < 1 {
-		return "", errors.New("there were no advices to provide")
+		return "", &notFoundError{
+			Err: errors.New("there were no advices to provide"),
+		}
 	}
 
 	rand.Seed(time.Now().Unix())

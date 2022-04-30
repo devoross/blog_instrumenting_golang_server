@@ -6,8 +6,13 @@ import (
 	"net/http"
 )
 
-type Payload struct {
+type response struct {
 	Advice string `json:"advice"`
+}
+
+type payload struct {
+	Advice        string `json:"advice"`
+	UpdatedAdvice string `json:"updated_advice"`
 }
 
 func (s *Store) AdviceHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,13 +24,13 @@ func (s *Store) AdviceHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		res := Payload{
+		res := response{
 			Advice: rAdvice,
 		}
 
 		json.NewEncoder(w).Encode(res)
 	case http.MethodDelete:
-		var rp Payload
+		var rp payload
 		err := json.NewDecoder(r.Body).Decode(&rp)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -49,7 +54,7 @@ func (s *Store) AdviceHandler(w http.ResponseWriter, r *http.Request) {
 			"success": true,
 		})
 	case http.MethodPost:
-		var rp Payload
+		var rp payload
 		err := json.NewDecoder(r.Body).Decode(&rp)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -67,6 +72,36 @@ func (s *Store) AdviceHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusConflict)
 			return
+		}
+
+		json.NewEncoder(w).Encode(map[string]bool{
+			"success": true,
+		})
+	case http.MethodPut:
+		var rp payload
+		err := json.NewDecoder(r.Body).Decode(&rp)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if rp.Advice == "" {
+			// check if the value was populated and/or there in the first place
+			http.Error(w, "please correct the request body provided", http.StatusBadRequest)
+			return
+		}
+
+		err = s.update(rp.Advice, rp.UpdatedAdvice)
+		if err != nil {
+			switch err.(type) {
+			case *notFoundError:
+				http.Error(w, err.Error(), http.StatusNotFound)
+				return
+			case *conflictError:
+				http.Error(w, err.Error(), http.StatusConflict)
+				return
+			}
+
 		}
 
 		json.NewEncoder(w).Encode(map[string]bool{

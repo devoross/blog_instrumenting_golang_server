@@ -59,6 +59,29 @@ Response
 }
 ```
 
+#### POST
+
+We use the `POST` method to create a resource, in this instance a piece of advice
+
+##### Status Codes:
+
+* `200` - Success - The resource was created successfully
+* `400` - Bad Request - The payload you have provided was not correct
+* `404` - Not Found - The resource you are trying to update could not be found
+* `409` - Conflict - The resource already exists
+
+```bash
+curl -XPOST -H "Content-Type: application/json" -d '{"advice": "Make your bed in the morning."}' http://localhost:8080/api/v1/advice -v
+```
+
+Response
+
+```json
+{
+    "success": true
+}
+```
+
 #### DELETE
 
 We use the `DELETE` method to delete a resource that was previously added
@@ -98,3 +121,5 @@ RED metrics are what we are collecting as part of this simple Go HTTP Web Server
 * Items action duration - `iwebserver_store_actions_duration` - This will be a gauge that records the total time taken to remove/create a piece of advice - Labels: `action (deleted/created)`
 * Total items in the store - `iwebserver_store_items_total` - This will be a gauge which states the current total amount of items in the store
 * Total errors to the store - `iwebserver_store_errors_total` - This will be a counter which records the total amount of errors when hitting the store
+
+Prometheus metrics found here : http://localhost:8080/metrics

@@ -20,6 +20,8 @@ func New(port string) *server {
 		router: mux.NewRouter(),
 	}
 
+	// every endpoint registered again this router will execute this middleware
+	s.router.Use(api.ExampleMiddleware)
 	s.router.HandleFunc("/api/v1/test", api.ExampleHandler)
 	return s
 }

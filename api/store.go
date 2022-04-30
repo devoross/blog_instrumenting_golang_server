@@ -76,9 +76,14 @@ func (s *Store) PopulateStore(amount int) error {
 	return nil
 }
 
-func (s *Store) retrieveRandomAdvice() string {
+func (s *Store) retrieveRandomAdvice() (string, error) {
+	// If we have no advices to give, we need to error
+	if len(s.advices) < 1 {
+		return "", errors.New("there were no advices to provide")
+	}
+
 	rand.Seed(time.Now().Unix())
-	return s.advices[rand.Intn(len(s.advices))]
+	return s.advices[rand.Intn(len(s.advices))], nil
 }
 
 func (s *Store) contains(containStr string) bool {

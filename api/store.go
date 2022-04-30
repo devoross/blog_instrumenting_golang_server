@@ -37,7 +37,7 @@ func (s *Store) remove(val string) error {
 
 	if !s.contains(val) {
 		// we don't have the item
-		return errors.New("no item found with provided name")
+		return errors.New("no item found with provided value")
 	}
 
 	s.mutex.Lock()

@@ -4,11 +4,13 @@ This is a simple HTTP Web Server written in Go for the purposes of a blog I am w
 
 ## What is this web server?
 
-This server will retrieve a random piece of advice from an in memory store, as well as provides Create and Delete capabilities. 
+This server will retrieve a random piece of advice from an in memory store, as well as provides CRUD capabilities. 
 
 In `server/server.go` we run a method on the store which will populate it. This takes one single `int` parameter which represents the amount of quotes you wish to populate the store with when the application starts. Below are the endpoints and parameters for those if you wish to add your own
 
 The server has a built in store, which is responsible for storing a slice of advices of which we can pick at random as and when that is requested
+
+We are using the [Prometheus Go Client Library](https://github.com/prometheus/client_golang) in this project to record our metrics
 
 ## Endpoints
 

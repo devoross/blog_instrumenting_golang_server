@@ -61,19 +61,19 @@ Response
 }
 ```
 
-#### POST
+#### PUT
 
-We use the `POST` method to create a resource, in this instance a piece of advice
+We use the `PUT` method to update a resource, in this instance a piece of advice
 
 ##### Status Codes:
 
-* `200` - Success - The resource was created successfully
+* `200` - Success - The resource was updated successfully
 * `400` - Bad Request - The payload you have provided was not correct
 * `404` - Not Found - The resource you are trying to update could not be found
 * `409` - Conflict - The resource already exists
 
 ```bash
-curl -XPOST -H "Content-Type: application/json" -d '{"advice": "Make your bed in the morning."}' http://localhost:8080/api/v1/advice -v
+curl -XPUT -H "Content-Type: application/json" -d '{"advice": "Make your bed in the morning.", "updated_advice": "Make your bed in the morning"}' http://localhost:8080/api/v1/advice -v
 ```
 
 Response

@@ -118,10 +118,10 @@ RED metrics are what we are collecting as part of this simple Go HTTP Web Server
 
 * Total Requests - `iwebserver_requests_total` - This will be a counter to count the total amount of requests - Labels: `code, route`
 * Total Errors - `iwebserver_requests_errors_total` - This will be a counter to count the total amount of failed requests - Labels: `code, route`
-* Duration - `iwebserver_requests_duration` - This will be a gauge to record the total duration of a request - Labels: `code, route`
-* Items action total - `iwebserver_store_action` - This will be a counter to count the amount of times that a piece of advice has been removed from the store - Labels: `action (deleted/created)`
-* Items action duration - `iwebserver_store_actions_duration` - This will be a gauge that records the total time taken to remove/create a piece of advice - Labels: `action (deleted/created)`
-* Total items in the store - `iwebserver_store_items_total` - This will be a gauge which states the current total amount of items in the store
+* Duration - `iwebserver_requests_duration` - This will be a histogram to record the total duration of a request - Labels: `code, route`
+* Items action total - `iwebserver_store_writes_total` - This will be a counter to count the amount of times that a piece of advice has been removed from the store - Labels: `action (deleted/created)`
+* Items action duration - `iwebserver_store_writes_duration` - This will be a histogram that records the total time taken to remove/create a piece of advice - Labels: `action (deleted/created)`
+* Total items in the store - `iwebserver_store_items_total` - This will be a histogram which states the current total amount of items in the store
 * Total errors to the store - `iwebserver_store_errors_total` - This will be a counter which records the total amount of errors when hitting the store
 
 Prometheus metrics found here : http://localhost:8080/metrics

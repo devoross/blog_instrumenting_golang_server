@@ -117,7 +117,7 @@ RED metrics are what we are collecting as part of this simple Go HTTP Web Server
 #### Metrics we are collecting
 
 * Total Requests - `iwebserver_requests_total` - This will be a counter to count the total amount of requests - Labels: `code, route`
-* Total Errors - `iwebserver_errors_total` - This will be a counter to count the total amount of failed requests - Labels: `code, route`
+* Total Errors - `iwebserver_requests_errors_total` - This will be a counter to count the total amount of failed requests - Labels: `code, route`
 * Duration - `iwebserver_requests_duration` - This will be a gauge to record the total duration of a request - Labels: `code, route`
 * Items action total - `iwebserver_store_action` - This will be a counter to count the amount of times that a piece of advice has been removed from the store - Labels: `action (deleted/created)`
 * Items action duration - `iwebserver_store_actions_duration` - This will be a gauge that records the total time taken to remove/create a piece of advice - Labels: `action (deleted/created)`
